@@ -90,7 +90,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator PowersRoutine()
     {
         // Wait and then turn the gameObject (and therefore, the collider) inactive
-        yield return new WaitForSeconds(0.2f);
+        yield return new WaitForSeconds(0.3f);
         power.SetActive(false);
     }
 }
