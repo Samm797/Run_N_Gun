@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
+    public static PlayerController Instance;
     public static event Action OnPowersActivated;
 
 
@@ -31,6 +32,17 @@ public class PlayerController : MonoBehaviour
 
     private void Awake()
     {
+        // if the instance exists, and the instance is not this, destroy itself
+        // Otherwise, set the instance as this 
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+        }
+        else
+        {
+            Instance = this;
+        }
+
         _rb = GetComponent<Rigidbody2D>();
         _animator = GetComponent<Animator>();
     }
@@ -79,7 +91,7 @@ public class PlayerController : MonoBehaviour
     {
         // Will need to add a CD of some sort, but currently can be spammed
 
-        // Event invoke if someone is listening
+        // Event invoked if there is a listener
         OnPowersActivated?.Invoke();
         // Turn the gameObject (and therefore, the collider) active
         power.SetActive(true);

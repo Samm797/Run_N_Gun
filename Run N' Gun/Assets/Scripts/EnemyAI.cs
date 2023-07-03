@@ -2,6 +2,7 @@ using System;
 using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
+[RequireComponent(typeof(EnemyPathfinding))]
 public class EnemyAI : MonoBehaviour
 {
     public static event Action OnKilled;
@@ -9,13 +10,16 @@ public class EnemyAI : MonoBehaviour
     private enum State
     {
         Idle,
-        Searching,
+        Patrol,
         Aware, 
-        Attacking
+        Attacking,
+        Dead
     }
 
     private State _state;
+    private EnemyPathfinding _enemyPathfinding;
     private HealthSystem _healthSystem;
+    private Animator _animator;
     /// <summary>
     /// 0 = Pistol;
     /// </summary>
@@ -31,23 +35,49 @@ public class EnemyAI : MonoBehaviour
         OnKilled -= Death;
     }
 
-    private void Start()
+    private void Awake()
     {
         _healthSystem = GetComponent<HealthSystem>();
+        _animator = GetComponent<Animator>();
+        _enemyPathfinding = GetComponent<EnemyPathfinding>();
+    }
+
+    private void Start()
+    {
+        if (PlayerController.Instance != null)
+        {
+            Debug.Log(PlayerController.Instance.transform.position);
+        }
     }
 
     private void Update()
     {
+        if (_state == State.Dead) return;
+        
         if (_healthSystem.CurrentHealth <= 0)
         {
-            // Calls the OnKilled event, which will trigger the Death() method
+            // Calls the OnKilled event, which will trigger the Death() method and other methods across the game
             OnKilled?.Invoke();
+        }
+
+        switch(_state)
+        {
+            case State.Idle:
+                break;
+            case State.Patrol:
+                break;
+            case State.Aware:
+                break;
+            case State.Attacking:
+                break;
         }
     }
 
     private void Death()
     {
-        // Death Animation
+        // Death Animation? 
+        _enemyPathfinding.StopMoving();
+        _state = State.Dead;
         Debug.Log("We ded.");
     }
 
