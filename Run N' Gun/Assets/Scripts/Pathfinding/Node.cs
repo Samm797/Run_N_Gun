@@ -1,21 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Node 
 {
-    public float F_Cost { get { return _fCost; } }
-    public float G_Cost { get { return _gCost; } }
-    public float H_Cost { get { return _hCost; } }
-    
-    private float _fCost;
-    private float _gCost;
-    private float _hCost;
+    public bool walkable;
+    public Vector2 worldPosition;
+    public int gridX;
+    public int gridY;
 
-    public Node(float fCost, float gCost)
+    public int gCost;
+    public int hCost;
+    public Node parent;
+    int heapIndex;
+
+    public Node(bool Walkable, Vector2 WorldPos, int GridX, int GridY)
     {
-        this._fCost = fCost;
-        this._gCost = gCost;
-        this._hCost = fCost + gCost;
+        this.walkable = Walkable;
+        this.worldPosition = WorldPos;
+        this.gridX = GridX;
+        this.gridY = GridY;
+    }
+
+    public int fCost
+    {
+        get
+        {
+            return gCost + hCost;
+        }
     }
 }
