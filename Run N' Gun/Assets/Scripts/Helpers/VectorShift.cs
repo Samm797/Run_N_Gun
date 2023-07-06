@@ -17,7 +17,7 @@ public class VectorShift
         }
         else
         {
-            return (Quaternion.Euler(0f, 0f, degrees) * direction).normalized;
+            return (Quaternion.Euler(0f, 0f, -degrees) * -direction).normalized;
         }
     }
 

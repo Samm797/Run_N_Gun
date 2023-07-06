@@ -3,7 +3,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(HealthSystem))]
 [RequireComponent(typeof(EnemyPathfinding))]
-public class EnemyAI : MonoBehaviour
+public class EnemyAI : MonoBehaviour, IDamagable
 {
     public static event Action OnKilled;
 
@@ -20,6 +20,7 @@ public class EnemyAI : MonoBehaviour
     private EnemyPathfinding _enemyPathfinding;
     private HealthSystem _healthSystem;
     private Animator _animator;
+    private Weapon _weapon;
     /// <summary>
     /// 0 = Pistol;
     /// </summary>
@@ -44,10 +45,7 @@ public class EnemyAI : MonoBehaviour
 
     private void Start()
     {
-        if (PlayerController.Instance != null)
-        {
-            Debug.Log(PlayerController.Instance.transform.position);
-        }
+
     }
 
     private void Update()
@@ -56,7 +54,7 @@ public class EnemyAI : MonoBehaviour
         
         if (_healthSystem.CurrentHealth <= 0)
         {
-            // Calls the OnKilled event, which will trigger the Death() method and other methods across the game
+            // Calls the OnKilled event, which will trigger the Death() method and other methods later
             OnKilled?.Invoke();
         }
 
@@ -72,6 +70,12 @@ public class EnemyAI : MonoBehaviour
                 break;
         }
     }
+    // Must be implemented because of the IDamagable interface
+    // Calls the damage function found on the health system
+    public void Damage()
+    {
+        _healthSystem.Damage();
+    }
 
     private void Death()
     {
@@ -81,12 +85,9 @@ public class EnemyAI : MonoBehaviour
         Debug.Log("We ded.");
     }
 
-    private void OnTriggerEnter2D(Collider2D other)
+    private void FireWeapon()
     {
-        // If the player's power hits the enemies' collider, take damage
-        if (other.CompareTag("Power"))
-        {
-            _healthSystem.Damage();
-        }
+        _weapon.Fire();
     }
+
 }

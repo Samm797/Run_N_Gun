@@ -4,7 +4,7 @@ using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Animator))]
-public class PlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour, IDamagable
 {
     public static PlayerController Instance;
     public static event Action OnPowersActivated;
@@ -104,5 +104,10 @@ public class PlayerController : MonoBehaviour
         // Wait and then turn the gameObject (and therefore, the collider) inactive
         yield return new WaitForSeconds(0.3f);
         power.SetActive(false);
+    }
+
+    public void Damage()
+    {
+        Debug.Log("We have been damaged!");
     }
 }
